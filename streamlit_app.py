@@ -37,7 +37,7 @@ st.markdown("Las redes neuronales de DeepLTranslate son capaces de captar hasta 
 uploaded_file = st.file_uploader("Cargar archivo DOCX", type=["docx"])
 
 # Selección de idioma de destino
-target_lang = st.selectbox("Seleccione el idioma de destino:", ["EN", "IT", "FR", "DE", "ES"])
+target_lang = st.selectbox("Seleccione el idioma de destino:", ["DE", "ES", "IT", "EN", "FR"])
 
 # Clave de autenticación de DeepL
 auth_key = st.text_input("Ingrese su clave de autenticación de DeepL:")
@@ -50,9 +50,6 @@ if st.button("Traducir"):
 
         translation, detected_source_language = translate_text(text, target_lang, auth_key)
         if translation:
-            st.success(f"Traducción: {translation}")
-            st.info(f"Idioma detectado: {detected_source_language}")
-
             # Crear un nuevo documento DOCX con la traducción
             translated_docx = Document()
             translated_docx.add_paragraph(translation)
