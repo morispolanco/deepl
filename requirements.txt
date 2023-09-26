@@ -1,1 +1,3 @@
 streamlit
+doc2txt
+python-docx
