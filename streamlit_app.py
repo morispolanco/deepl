@@ -1,6 +1,8 @@
 import streamlit as st
 import requests
 import docx2txt
+from docx import Document
+from io import BytesIO
 
 # Cambiar el título en la pestaña del navegador
 st.set_page_config(page_title="DeepLTranslate", layout="centered")
@@ -24,7 +26,6 @@ def translate_text(text, target_lang, auth_key):
     else:
         return None, None
 
-
 # Título de la aplicación
 st.title("DeepLTranslate")
 
@@ -36,7 +37,7 @@ st.markdown("Las redes neuronales de DeepLTranslate son capaces de captar hasta 
 uploaded_file = st.file_uploader("Cargar archivo DOCX", type=["docx"])
 
 # Selección de idioma de destino
-target_lang = st.selectbox("Seleccione el idioma de destino:", ["EN", "ES"])
+target_lang = st.selectbox("Seleccione el idioma de destino:", ["EN", "IT", "FR", "DE", "ES"])
 
 # Clave de autenticación de DeepL
 auth_key = st.text_input("Ingrese su clave de autenticación de DeepL:")
@@ -51,6 +52,18 @@ if st.button("Traducir"):
         if translation:
             st.success(f"Traducción: {translation}")
             st.info(f"Idioma detectado: {detected_source_language}")
+
+            # Crear un nuevo documento DOCX con la traducción
+            translated_docx = Document()
+            translated_docx.add_paragraph(translation)
+
+            # Guardar el documento DOCX en un objeto BytesIO
+            docx_buffer = BytesIO()
+            translated_docx.save(docx_buffer)
+            docx_buffer.seek(0)
+
+            # Descargar el archivo DOCX
+            st.download_button("Descargar traducción", data=docx_buffer, file_name="traduccion.docx")
         else:
             st.error("Error al traducir el texto. Verifique su clave de autenticación o intente nuevamente.")
     else:
